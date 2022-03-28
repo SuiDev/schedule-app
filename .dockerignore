@@ -1,0 +1,9 @@
+.dockerignore
+.editorconfig
+.prettierignore
+.prettierrc.json
+.git
+*.md
+node_modules
+Dockerfile-*
+docker-compose.yml

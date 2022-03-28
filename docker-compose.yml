@@ -1,0 +1,66 @@
+version: "3"
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  main:
+    build:
+      context: ./services/api/main
+      dockerfile: Dockerfile-main
+    restart: always
+    ports:
+     - "4000:4000"
+    depends_on:
+      - redis
+    volumes: ["./services/api/main:/services/api/main"]
+  worker:
+    build:
+      context: ./services/api/celery-queue
+      dockerfile: Dockerfile-queue
+    command: celery -A tasks worker -l info -E
+    environment:
+      CELERY_BROKER_URL: redis://redis
+      CELERY_RESULT_BACKEND: redis://redis
+    depends_on:
+      - redis
+    volumes: ["./services/api/celery-queue:/services/api/queue"]
+  monitor:
+    build:
+      context: ./services/api/celery-queue
+      dockerfile: Dockerfile-queue
+    ports:
+     - "5555:5555"
+    command:  ["celery", "flower", "-A", "tasks"]
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+    depends_on:
+      - redis
+      - worker
+    volumes: ["./api/celery-queue:/api/queue"]
+  ui:
+    build:
+      context: ./services/ui
+      dockerfile: Dockerfile-ui
+    volumes:
+      - ./services/ui:/var/www
+    command: sh -c "yarn start";
+    container_name: "ui"
+    ports:
+      - "3000:3000"
+    tty: true
+  nginx:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile-nginx
+    command: nginx -g "daemon off";
+    container_name: "nginx"
+    ports:
+      - "80:80"
+    depends_on:
+      - "redis"
+      - "main"
+      - "worker"
+      - "monitor"
+      - "ui"
