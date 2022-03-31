@@ -1,4 +1,5 @@
 import React, { createContext } from "react";
+import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 
 /** Material UI Modules */
@@ -37,69 +38,68 @@ const TaskList = () => {
     headerResponsiveEdge: headerResponsiveEdge,
   };
 
-  // TODO: tasksが0だと画面が描画されない
   const tasks = [
     {
-      id: "Task 1",
+      id: "1",
       name: "Redesign website",
-      start: "2016-12-15",
-      end: "2016-12-31",
+      start: "2022-4-1",
+      end: "2022-4-30",
       progress: 10,
       dependencies: "",
     },
     {
-      id: "Task 2",
+      id: "2",
       name: "Redesign website",
-      start: "2016-12-28",
-      end: "2016-12-31",
+      start: "2022-4-1",
+      end: "2022-4-30",
       progress: 20,
-      dependencies: "Task 1",
+      dependencies: "1",
     },
     {
-      id: "Task 3",
+      id: "3",
       name: "Redesign website",
-      start: "2016-12-28",
-      end: "2016-12-31",
+      start: "2022-4-1",
+      end: "2022-4-30",
       progress: 0,
-      dependencies: "Task 2, Task 1",
+      dependencies: "2, 1",
     },
     {
-      id: "Task 4",
+      id: "4",
       name: "Redesign website",
-      start: "2016-12-15",
-      end: "2016-12-31",
+      start: "2022-4-1",
+      end: "2022-4-30",
       progress: 10,
       dependencies: "",
     },
     {
-      id: "Task 5",
+      id: "5",
       name: "Redesign website",
-      start: "2016-12-28",
-      end: "2016-12-31",
+      start: "2022-4-1",
+      end: "2022-4-30",
       progress: 20,
-      dependencies: "Task 4",
+      dependencies: "4",
     },
     {
-      id: "Task 6",
+      id: "6",
       name: "Redesign website",
-      start: "2016-12-28",
-      end: "2016-12-31",
+      start: "2022-4-1",
+      end: "2022-4-30",
       progress: 0,
-      dependencies: "Task 5, Task 4",
+      dependencies: "5, 4",
     },
   ];
 
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
+  const createData = (name, assign) => {
+    return { name, assign };
+  };
 
   const rows = [
-    createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-    createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-    createData("Eclair", 262, 16.0, 24, 6.0),
-    createData("Frozen yoghurt2", 159, 6.0, 24, 4.0),
-    createData("Ice cream sandwich2", 237, 9.0, 37, 4.3),
-    createData("Eclair2", 262, 16.0, 24, 6.0),
+    createData("task A", "A"),
+    createData("task B", "B"),
+    createData("task C", "C"),
+    createData("task D", "D"),
+    createData("task E", "E"),
+    createData("task F", "F"),
   ];
 
   return (
@@ -115,98 +115,137 @@ const TaskList = () => {
         >
           <Header />
           <MenuBar />
-          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-            <Toolbar />
-            <div>
-              並び替え：
-              <Button>終了日が近い順</Button>
-              <Button>開始日順</Button>
-              <Button>重要度順</Button>
-              <Button>共有者が多い順</Button>
-            </div>
-            <div>
-              フィルター：
-              <Button>今日までの未完了タスク</Button>
-              <Button>タスク者が自分</Button>
-            </div>
-            {/** ガントチャート */}
-            <div
-              style={{
-                width: "10%",
-                display: "inline-block",
-                verticalAlign: "top",
-              }}
-            >
-              <TableContainer component={Paper} elevation={0}>
-                <Table
-                  sx={{
-                    minWidth: 100,
-                    borderLeft: 1,
-                    borderLeftColor: "#e0e0e0",
+          <Box
+            component="main"
+            sx={{
+              width: "70%",
+              flexGrow: 1,
+              p: "70px 30px 30px 30px",
+            }}
+          >
+            <ItemListStyle>
+              <ItemStyle>
+                並び替え：
+                <Button>終了日が近い順</Button>
+                <Button>開始日順</Button>
+                <Button>重要度順</Button>
+                <Button>共有者が多い順</Button>
+              </ItemStyle>
+              <ItemStyle>
+                フィルター：
+                <Button>今日までの未完了タスク</Button>
+                <Button>タスク者が自分</Button>
+              </ItemStyle>
+            </ItemListStyle>
+            {/** タスクが存在するときのみチャートを描画します。 */}
+            {tasks.length ? (
+              // ガントチャート
+              <>
+                <div
+                  style={{
+                    width: "30%",
+                    display: "inline-block",
+                    verticalAlign: "top",
                   }}
-                  size="small"
-                  aria-label="a dense table"
                 >
-                  <TableHead sx={{ height: 59.5 }}>
-                    <TableRow>
-                      <TableCell
-                        sx={{
-                          stroke: "#e0e0e0",
-                          borderTop: 0.1,
-                          borderTopColor: "#e0e0e0",
-                          borderBottomWidth: 1,
-                        }}
-                      >
-                        Dessert (100g serving)
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.map((row, index) => (
-                      <TableRow
-                        key={row.name}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                          height: rows.length === index + 1 ? 35 : 40,
-                          backgroundColor: index % 2 ? "#f5f5f5" : "white",
-                        }}
-                      >
-                        <TableCell
-                          component="th"
-                          scope="row"
-                          sx={{ borderColor: "#ebeff2" }}
-                        >
-                          {row.name}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-            <div
-              style={{
-                width: "28%",
-                display: "inline-block"
-              }}
-            >
-              <FrappeGantt
-                onClick={task => console.log(task)}
-                onDateChange={(task, start, end) =>
-                  console.log(task, start, end)
-                }
-                onProgressChange={(task, progress) =>
-                  console.log(task, progress)
-                }
-                onTasksChange={tasks => console.log(tasks)}
-                tasks={tasks}
-              />
-            </div>
+                  <TableContainer component={Paper} elevation={0}>
+                    <Table
+                      sx={{
+                        minWidth: 300,
+                        borderLeft: 1,
+                        borderLeftColor: "#e0e0e0",
+                      }}
+                      size="small"
+                      aria-label="a dense table"
+                    >
+                      <TableHead sx={{ height: 59.5 }}>
+                        <TableRow>
+                          <TableCell
+                            sx={{
+                              stroke: "#e0e0e0",
+                              borderTop: 0.1,
+                              borderTopColor: "#e0e0e0",
+                              borderBottomWidth: 1,
+                              backgroundColor: "#f3f0e2",
+                            }}
+                          >
+                            タスク名
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {rows.map((row, index) => (
+                          <TableRow
+                            key={row.name}
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                              height: rows.length === index + 1 ? 35 : 40,
+                              backgroundColor: index % 2 ? "#f5f5f5" : "white",
+                            }}
+                          >
+                            <TableCell
+                              component="th"
+                              scope="row"
+                              sx={{ borderColor: "#ebeff2" }}
+                            >
+                              {row.name}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+                <div
+                  style={{
+                    width: "70%",
+                    display: "inline-block",
+                  }}
+                >
+                  <FrappeGantt
+                    onClick={task => console.log(task)}
+                    onDateChange={(task, start, end) =>
+                      console.log(task, start, end)
+                    }
+                    onProgressChange={(task, progress) =>
+                      console.log(task, progress)
+                    }
+                    onTasksChange={tasks => console.log(tasks)}
+                    tasks={tasks}
+                  />
+                </div>
+              </>
+            ) : (
+              // タスクが存在しないときメッセージを表示します。
+              <NoTaskMessageStyle>
+                <p>表示するタスクはありません</p>
+              </NoTaskMessageStyle>
+            )}
           </Box>
         </Box>
       </MediaContext.Provider>
     </>
   );
 };
+
+// 項目グループCSS
+const ItemListStyle = styled.div`
+  padding: 15px 0 5px 0;
+`;
+
+// 項目CSS
+const ItemStyle = styled.div`
+  font-size: 16px;
+  width: 100%;
+  margin: 0 0 15px 0;
+  border-bottom: 1px solid;
+`;
+
+// タスクなしメッセージCSS
+const NoTaskMessageStyle = styled.div`
+  font-size: 18px;
+  text-align: center;
+  color: #8f8974;
+`;
 
 export default TaskList;

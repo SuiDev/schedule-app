@@ -37,6 +37,21 @@ const Header = () => {
     setUserMenu(null);
   };
 
+  /** お知らせ内容 */
+  const NotificationContents = () => {
+    return (
+      <>
+        <MenuItem>
+          <Avatar /> お知らせ1
+        </MenuItem>
+        <Divider />
+        <MenuItem>
+          <Avatar /> お知らせ2
+        </MenuItem>
+      </>
+    );
+  };
+
   return (
     <>
       <CssBaseline />
@@ -53,7 +68,8 @@ const Header = () => {
           <Typography
             sx={{
               flexGrow: 1,
-              ml: 1,
+              ml: 5,
+              fontSize: 22,
             }}
             variant="body1"
             color="white"
@@ -109,13 +125,7 @@ const Header = () => {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem>
-              <Avatar /> お知らせ1
-            </MenuItem>
-            <Divider />
-            <MenuItem>
-              <Avatar /> お知らせ2
-            </MenuItem>
+            <NotificationContents />
           </Menu>
           {/** ユーザーメニュー */}
           <Button
@@ -126,11 +136,17 @@ const Header = () => {
             disableElevation
             onClick={handleUserMenu}
             endIcon={<KeyboardArrowDownIcon />}
-            style={{
+            sx={{
               backgroundColor: "#02576C",
+              mr: 5,
+              fontSize: 16,
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "#02576C",
+              },
             }}
           >
-            user_name
+            test user
           </Button>
           <Menu
             anchorEl={userMenu}
