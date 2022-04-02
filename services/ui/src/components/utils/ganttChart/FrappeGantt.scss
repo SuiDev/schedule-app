@@ -1,0 +1,20 @@
+/* ヘッダー背景色 */
+.gantt .grid-header {
+  fill: #f3f0e2;
+}
+
+/* タスクラベル */
+.gantt .bar-label {
+  font-weight: bold;
+}
+
+/* タスクバー
+.gantt .bar-progress {
+  fill: #ff6060;
+}
+*/
+
+/* 今日の日付の列を強調 */
+.gantt .today-highlight {
+  fill: #f7bc78;
+}
